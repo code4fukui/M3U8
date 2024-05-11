@@ -19,3 +19,18 @@ Deno.test("via fetch", async () => {
   const files = m3u8.getFiles();
   t.assertEquals(files, ["test1.jpg", "test2.jpg"]);
 });
+Deno.test("EXTM3U from file", async () => {
+  const m3u8 = await M3U8.fetch("./testext.m3u8");
+  const files = m3u8.getFiles();
+  t.assertEquals(files, ["test1.jpg", "test2.jpg"]);
+  const info = m3u8.getInfo();
+  t.assertEquals(info, [{
+    file: "test1.jpg",
+    duration: 3,
+  }, {
+    file: "test2.jpg",
+    author: "Code for FUKUI",
+    title: "title",
+    duration: 5,
+  }]);
+});
