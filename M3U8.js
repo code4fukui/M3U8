@@ -55,4 +55,30 @@ export class M3U8 {
     const txt = await fetchTextOrLoad(path);
     return new M3U8(txt);
   }
+  static async fromDir(dir) {
+    const list = [];
+    for await (const f of Deno.readDir(dir)) {
+      if (f.isDirectory) continue;
+      if (f.name.startsWith(".")) continue;
+      list.push({ file: f.name });
+    }
+    return new M3U8(list);
+  }
+  toString() {
+    const ss = this.files.map(i => {
+      if (i.duration) {
+        if (i.title) {
+          if (i.author) {
+            return "#M3U8INFO:" + i.duration + ", " + i.title + " - " + i.author + "\n" + i.file;
+          } else {
+            return "#M3U8INFO:" + i.duration + ", " + i.title + "\n" + i.file;
+          }
+        }
+        return "#M3U8INFO:" + i.duration + "\n" + i.file;
+      }
+      return i.file;
+    });
+    ss.unshift("#M3U8EXT");
+    return ss.join("\n") + "\n";
+  }
 };

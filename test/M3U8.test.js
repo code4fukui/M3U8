@@ -34,3 +34,28 @@ Deno.test("EXTM3U from file", async () => {
     duration: 5,
   }]);
 });
+Deno.test("toString", async () => {
+  const info = [{
+    file: "test1.jpg",
+    duration: 3,
+  }, {
+    file: "test2.jpg",
+    author: "Code for FUKUI",
+    title: "title",
+    duration: 5,
+  }];
+  const m3u8 = new M3U8(info);
+  t.assertEquals(m3u8.toString(), `#M3U8EXT
+#M3U8INFO:3
+test1.jpg
+#M3U8INFO:5, title - Code for FUKUI
+test2.jpg
+`);
+});
+Deno.test("fromDir on Deno", async () => {
+  const m3u8 = await M3U8.fromDir("./dir")
+  t.assertEquals(m3u8.toString(), `#M3U8EXT
+dummy1.jpg
+dummy2.jpg
+`);
+});
