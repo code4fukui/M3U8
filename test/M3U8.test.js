@@ -17,7 +17,10 @@ Deno.test("from json", async () => {
 Deno.test("via fetch", async () => {
   const m3u8 = await M3U8.fetch("https://code4fukui.github.io/M3U8/test/test.m3u8");
   const files = m3u8.getFiles();
-  t.assertEquals(files, ["test1.jpg", "test2.jpg"]);
+  t.assertEquals(files, [
+    "https://code4fukui.github.io/M3U8/test/test1.jpg",
+    "https://code4fukui.github.io/M3U8/test/test2.jpg",
+  ]);
 });
 Deno.test("EXTM3U from file", async () => {
   const m3u8 = await M3U8.fetch("./testext.m3u8");

@@ -1,7 +1,11 @@
 import { fetchTextOrLoad } from "./fetchOrLoad.js";
 
 export class M3U8 {
-  constructor(txt) {
+  constructor(txt, basepath) {
+    if (basepath && basepath.lastIndexOf("/") >= 0) {
+      basepath = basepath.substring(0, basepath.lastIndexOf("/") + 1);
+      if (basepath != "./") this.basepath = basepath;
+    }
     if (typeof txt == "string") {
       if (!txt.startsWith("#EXTM3U\n")) {
         this.files = txt.split("\n").filter(i => !i.startsWith("#") && i.length > 0).map(i => ({ file: i }));;
@@ -45,15 +49,24 @@ export class M3U8 {
       throw new Error("accept only string or array");
     }
   }
+  makePath(path) {
+    if (this.basepath) {
+      return this.basepath + path;
+    }
+    return path;
+  }
   getFiles() {
-    return this.files.map(i => i.file);
+    return this.files.map(i => this.makePath(i.file));
   }
   getInfo() {
-    return this.files;
+    return this.files.map(i => {
+      i.file = this.makePath(i.file);
+      return i;
+    });
   }
   static async fetch(path) {
     const txt = await fetchTextOrLoad(path);
-    return new M3U8(txt);
+    return new M3U8(txt, path);
   }
   static async fromDir(dir) {
     const list = [];
