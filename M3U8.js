@@ -73,9 +73,11 @@ export class M3U8 {
     for await (const f of Deno.readDir(dir)) {
       if (f.isDirectory) continue;
       if (f.name.startsWith(".")) continue;
-      list.push({ file: f.name });
+      if (f.name.endsWith(".m3u8")) continue;
+      list.push(f.name);
     }
-    return new M3U8(list);
+    list.sort();
+    return new M3U8(list.map(i => ({ file: i })));
   }
   toString() {
     const ss = this.files.map(i => {
