@@ -1,5 +1,7 @@
 # M3U8
 
+> 日本語のREADMEはこちらです: [README.ja.md](README.ja.md)
+
 A JavaScript library to handle M3U8 playlists.
 
 ## Features
